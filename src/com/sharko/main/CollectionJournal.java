@@ -8,9 +8,6 @@ import com.sharko.exception.NoSuchIndexException;
 
 public class CollectionJournal implements Journal, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1497520835958827631L;
 
 	ArrayList<Record> record = new ArrayList<Record>();
@@ -36,22 +33,14 @@ public class CollectionJournal implements Journal, Serializable {
 
 	@Override
 	public void add(Record r) {
-		// if (r != null) {
 		record.add(r);
-		// } else {
-		// System.out.println("Can't add null object");
-		// }
 	}
 
 	@Override
 	public void add(Journal j) throws NoSuchIndexException {
-		// if (j != null) {
 		for (int i = 0; i < j.size(); i++) {
 			add(j.get(i));
 		}
-		// } else {
-		// System.out.println("Can't add null object");
-		// }
 
 	}
 
@@ -86,11 +75,7 @@ public class CollectionJournal implements Journal, Serializable {
 	@Override
 	public void insert(int index, Record r) {
 		if (index > 0 && index < record.size()) {
-			// if (r != null) {
 			record.add(index, r);
-			// } else {
-			// System.out.println("Can't add null object");
-			// }
 		} else {
 			System.out.println("No such index");
 		}
