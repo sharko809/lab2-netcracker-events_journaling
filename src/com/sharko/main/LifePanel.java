@@ -10,46 +10,24 @@ import java.io.IOException;
 
 import javax.swing.JPanel;
 
-/**
- * Панель симулятора с редактором поля.
- * Левой кнопкой мыши можно ставить клетки, правой - стирать. Редактирование доступно в любое время, даже когда
- * симуляция запущена.
- * Процесс симуляции выполняется в отдельном потоке.
- */
 public class LifePanel extends JPanel implements Runnable {
  
 	private static final long	serialVersionUID	= -7705111475296001684L;
  
 	private Thread				simThread			= null;
 	private LifeModel			life				= null;
-	/**
-	 * Задержка в мс между шагами симуляции.
-	 */
 	private int					updateDelay			= 100;
-	/**
-	 * Размер клетки на экране.
-	 */
 	private int					cellSize			= 8;
-	/**
-	 * Промежуток между клетками.
-	 */
 	private int					cellGap				= 1;
-	/**
-	 * Цвет мертвой клетки.
-	 */
 	private static final Color	c0					= new Color(0x505050);
-	/**
-	 * Цвет живой клетки.
-	 */
 	private static final Color	c1					= new Color(0xFFFFFF);
  
 	public LifePanel() {
 		setBackground(Color.BLACK);
  
-		// редактор поля
 		MouseAdapter ma = new MouseAdapter() {
-			private boolean	pressedLeft		= false;	// нажата левая кнопка мыши
-			private boolean	pressedRight	= false;	// нажата правая кнопка мыши
+			private boolean	pressedLeft		= false;
+			private boolean	pressedRight	= false;
  
 			@Override public void mouseDragged(MouseEvent e) {
 				setCell(e);
@@ -74,16 +52,10 @@ public class LifePanel extends JPanel implements Runnable {
 					pressedRight = false;
 				}
 			}
- 
-			/**
-			 * Устанавливает/стирает клетку.
-			 * 
-			 * @param e
-			 */
+
 			private void setCell(MouseEvent e) {
 				if (life != null) {
 					synchronized (life) {
-						// рассчитываем координаты клетки, на которую указывает курсор мыши
 						int x = e.getX() / (cellSize + cellGap);
 						int y = e.getY() / (cellSize + cellGap);
 						if (x >= 0 && y >= 0 && x < life.getWidth() && y < life.getHeight()) {
@@ -116,9 +88,6 @@ public class LifePanel extends JPanel implements Runnable {
 		this.updateDelay = updateDelay;
 	}
  
-	/**
-	 * Запуск симуляции.
-	 */
 	public void startSimulation() {
 		if (simThread == null) {
 			simThread = new Thread(this);
@@ -126,9 +95,6 @@ public class LifePanel extends JPanel implements Runnable {
 		}
 	}
  
-	/**
-	 * Остановка симуляции.
-	 */
 	public void stopSimulation() {
 		simThread = null;
 	}
@@ -143,13 +109,10 @@ public class LifePanel extends JPanel implements Runnable {
 			try {
 				Thread.sleep(updateDelay);
 			} catch (InterruptedException e) {}
-			// синхронизация используется для того, чтобы метод paintComponent не выводил на экран
-			// содержимое поля, которое в данный момент меняется 
 			synchronized (life) {
 				try {
 					life.simulate();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -157,10 +120,7 @@ public class LifePanel extends JPanel implements Runnable {
 		}
 		repaint();
 	}
- 
-	/* 
-	 * Возвращает размер панели с учетом размера поля и клеток.
-	 */
+
 	@Override public Dimension getPreferredSize() {
 		if (life != null) {
 			Insets b = getInsets();
@@ -170,9 +130,7 @@ public class LifePanel extends JPanel implements Runnable {
 			return new Dimension(100, 100);
 	}
  
-	/* 
-	 * Прорисовка содержимого панели.
-	 */
+
 	@Override protected void paintComponent(Graphics g) {
 		if (life != null) {
 			synchronized (life) {
