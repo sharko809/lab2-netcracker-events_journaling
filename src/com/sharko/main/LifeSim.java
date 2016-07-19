@@ -27,7 +27,6 @@ public class LifeSim extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		lifePanel = new LifePanel();
-		// размеры поля
 		lifePanel.initialize(100, 70);
 		add(lifePanel);
  
@@ -35,12 +34,11 @@ public class LifeSim extends JFrame {
 		toolBar.setFloatable(false);
 		add(toolBar, BorderLayout.NORTH);
  
-		button1 = new JButton("Запустить");
+		button1 = new JButton("Г‡Г ГЇГіГ±ГІГЁГІГј");
 		toolBar.add(button1);
-		button2 = new JButton("Очистить поле");
+		button2 = new JButton("ГЋГ·ГЁГ±ГІГЁГІГј ГЇГ®Г«ГҐ");
 		toolBar.add(button2);
  
-		// бегунок, регулирующий скорость симуляции (задержка в мс между шагами симуляции)
 		slider = new JSlider(1, 200);
 		slider.setValue(50);
 		lifePanel.setUpdateDelay(slider.getValue());
@@ -51,23 +49,21 @@ public class LifeSim extends JFrame {
 		});
  
 		toolBar.addSeparator();
-		toolBar.add(new JLabel(" Быстро"));
+		toolBar.add(new JLabel(" ГЃГ»Г±ГІГ°Г®"));
 		toolBar.add(slider);
-		toolBar.add(new JLabel("Медленно"));
+		toolBar.add(new JLabel("ГЊГҐГ¤Г«ГҐГ­Г­Г®"));
  
-		// запуск/остановка симуляции; попутно меняется надпись на кнопке
 		button1.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				if (lifePanel.isSimulating()) {
 					lifePanel.stopSimulation();
-					button1.setText("Запустить");
+					button1.setText("Г‡Г ГЇГіГ±ГІГЁГІГј");
 				} else {
 					lifePanel.startSimulation();
-					button1.setText("Остановить");
+					button1.setText("ГЋГ±ГІГ Г­Г®ГўГЁГІГј");
 				}
 			}
 		});
-		// очистка поля
 		button2.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				synchronized (lifePanel.getLifeModel()) {
@@ -82,17 +78,6 @@ public class LifeSim extends JFrame {
 		pack();
 		setVisible(true);
 	}
- 
-//	public static void main(String[] args) {
-//		try {
-//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//		} catch (Exception e) {}
-// 
-//		SwingUtilities.invokeLater(new Runnable() {
-//			public void run() {
-//				new LifeSim("LifeSim");
-//			}
-//		});
-//	}
+
  
 }
