@@ -19,9 +19,6 @@ import com.sharko.exception.NullJournalException;
  */
 public class ArrayJournal implements Journal, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -649658185919357312L;
 	Record[] record = new Record[3];
 	int recordsNumber = size();
@@ -98,26 +95,21 @@ public class ArrayJournal implements Journal, Serializable {
 		// we definitely can go through a loop to look for
 		// recording, but why make your life more
 		// complicated? Apache commons is fine
-		// if (r != null) {
 		record = (Record[]) ArrayUtils.removeElement(record, r);
-		// } else {
-		// throw new NullRecordException();
-		// }
 	}
 
 	@Override
-	public Record get(int index) /* throws NoSuchIndexException */ {
+	public Record get(int index) {
 		if (index > 0 && index < record.length) {
 			return record[index];
 		} else {
-			// throw new NoSuchIndexException();
 			System.out.println("No such index.");
 			return null;
 		}
 	}
 
 	@Override
-	public void set(int index, Record r) /* throws NullRecordException */ {
+	public void set(int index, Record r) {
 		if (index > 0 && index < record.length) {
 			record[index] = r;
 		} else {
