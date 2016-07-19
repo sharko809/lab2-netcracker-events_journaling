@@ -6,14 +6,6 @@ import java.util.Date;
 
 import com.sharko.main.Record.Importance;
 
-/**
- * ћодель данных "∆изни". ѕоле завернуто в тороид, т.е. и левый и правый кра€, и
- * верхний и нижний, €вл€ютс€ замкнутыми. ѕри симул€ции используетс€ принцип
- * двойной буферизации: данные берутс€ из главного массива mainField, после
- * расчета результат складываетс€ во вспомогательный массив backField. ѕо
- * окончании расчета одного шага ссылки на эти массивы мен€ютс€ местами. ¬
- * массивах хран€тс€ значени€: 0, если клетка мертва, и 1, если жива.
- */
 public class LifeModel {
 
 	ArrayJournal aj = new ArrayJournal();
@@ -24,14 +16,6 @@ public class LifeModel {
 	private int[] neighborOffsets = null;
 	private int[][] neighborXYOffsets = null;
 
-	/**
-	 * »нициализаци€ модели.
-	 * 
-	 * @param width
-	 *            ширина пол€ данных
-	 * @param height
-	 *            высота пол€ данных
-	 */
 	public LifeModel(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -62,13 +46,8 @@ public class LifeModel {
 		return mainField[y * width + x];
 	}
 
-	/**
-	 * ќдин шаг симул€ции.
-	 * 
-	 * @throws IOException
-	 */
+
 	public void simulate() throws IOException {
-		// обрабатываем клетки, не касающиес€ краев пол€
 		for (int y = 1; y < height - 1; y++) {
 			for (int x = 1; x < width - 1; x++) {
 				int j = y * width + x;
@@ -78,8 +57,6 @@ public class LifeModel {
 			}
 		}
 
-		// обрабатываем граничные клетки
-		// верхн€€ и нижн€€ строки
 		for (int x = 0; x < width; x++) {
 			int j = width * (height - 1);
 			byte n = countBorderNeighbors(x, 0);
@@ -87,7 +64,7 @@ public class LifeModel {
 			n = countBorderNeighbors(x, height - 1);
 			backField[x + j] = simulateCell(mainField[x + j], n);
 		}
-		// крайние левый и правый столбцы
+
 		for (int y = 1; y < height - 1; y++) {
 			int j = width * y;
 			byte n = countBorderNeighbors(0, y);
@@ -96,19 +73,13 @@ public class LifeModel {
 			backField[j + width - 1] = simulateCell(mainField[j + width - 1], n);
 		}
 
-		// обмениваем пол€ местами
+
 		byte[] t = mainField;
 		mainField = backField;
 		backField = t;
 	}
 
-	/**
-	 * ѕодсчет соседей дл€ не касающихс€ краев клеток.
-	 * 
-	 * @param j
-	 *            смещение клетки в массиве
-	 * @return кол-во соседей
-	 */
+
 	private byte countNeighbors(int j) {
 		byte n = 0;
 		for (int i = 0; i < 8; i++) {
@@ -117,13 +88,7 @@ public class LifeModel {
 		return n;
 	}
 
-	/**
-	 * ѕодсчет соседей дл€ граничных клеток.
-	 * 
-	 * @param x
-	 * @param y
-	 * @return кол-во соседей
-	 */
+
 	private byte countBorderNeighbors(int x, int y) {
 		byte n = 0;
 		for (int i = 0; i < 8; i++) {
@@ -134,31 +99,13 @@ public class LifeModel {
 		return n;
 	}
 
-	/**
-	 * —имул€ци€ дл€ одной клетки.
-	 * 
-	 * @param self
-	 *            собственное состо€ние клетки: 0/1
-	 * @param neighbors
-	 *            кол-во соседей
-	 * @return новое состо€ние клетки: 0/1
-	 * @throws IOException
-	 * @throws NullPointerException
-	 */
+
 	private byte simulateCell(byte self, byte neighbors) throws NullPointerException, IOException {
 		return (byte) (self == 0 ? (neighbors == 3 ? checkLife((byte) 1) : checkLife((byte) 0))
 				: neighbors == 2 || neighbors == 3 ? checkLife((byte) 1) : checkLife((byte) 0));
 	}
 
-	/**
-	 * Check cell state and write it to file (writing to journal makes java run
-	 * out of memory)
-	 * 
-	 * @param self
-	 * @return cell state
-	 * @throws NullPointerException
-	 * @throws IOException
-	 */
+
 	private byte checkLife(byte self) throws NullPointerException, IOException {
 		if (self == 0) {
 			ToFileWritter.writeToFile(new Record(new Date(), Importance.WARNING, "", "cell died"));
